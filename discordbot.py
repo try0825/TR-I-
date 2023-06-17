@@ -1,33 +1,29 @@
 from cmath import log
 from distutils.sysconfig import PREFIX
 import discord
+from discord.ext import commands
+from discord_slash import SlashCommand
+
 from dotenv import load_dotenv
 import os
 load_dotenv()
 
-import discord
-from discord import app_commands
-from discord.ext import commands
+bot = commands.Bot(command_prefix="!", intents=discord.Intents.all())
+slash = SlashCommand(bot, sync_commands=True)
 
-bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
 TOKEN = os.environ['TOKEN']
+
 @bot.event
 async def on_ready():
-	print("Bot is ready!")
-	try:
-		synced = await bot.tree.sync()
-		print(f"Synced {len(synced)} commands(s)")
+    print("Bot is ready!")
+    print(f"Synced {len(bot.slash.commands)} command(s)")
 
-	except Exception as e:
-		print(e)
+@slash.slash(name="hello", description="Say hello")
+async def hello(ctx):
+    await ctx.send(f"Hey {ctx.author.mention}! This is a slash command!")
 
-@bot.tree.command(name="hello")
-async def hello(interaction: discord.Interaction):
-	await interaction.response.send_message(f"Hey {interaction.user.mention}! This is a slash command!", ephemeral=True)
-
-@bot.tree.command(name="say")
-@app_commands.describe(thing_to_say = "what should I say?")
-async def say(interaction: discord.Interaction, thing_to_say: str):
-	await interaction.response.send_message(f"{interaction.user.name} said: `{thing_to_say}`")
+@slash.slash(name="say", description="Echo a message")
+async def say(ctx, thing_to_say: str):
+    await ctx.send(f"{ctx.author.name} said: `{thing_to_say}`")
 
 bot.run(TOKEN)
