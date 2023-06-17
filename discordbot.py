@@ -5,28 +5,29 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
-PREFIX = os.environ['PREFIX']
+import discord
+from discord import app_commands
+from discord.ext import commands
+
+bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
 TOKEN = os.environ['TOKEN']
-
-client = discord.Client()
-
-@client.event
+@bot.event
 async def on_ready():
-    print(f'Logged in as {client.user}.')
+	print("Bot is ready!")
+	try:
+		synced = await bot.tree.sync()
+		print(f"Synced {len(synced)} commands(s)")
 
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
+	except Exception as e:
+		print(e)
 
-    if message.content == f'{PREFIX}call':
-        await message.channel.send("callback!")
+@bot.tree.command(name="hello")
+async def hello(interaction: discord.Interaction):
+	await interaction.response.send_message(f"Hey {interaction.user.mention}! This is a slash command!", ephemeral=True)
 
-    if message.content.startswith(f'{PREFIX}hello'):
-        await message.channel.send('Hello!')
+@bot.tree.command(name="say")
+@app_commands.describe(thing_to_say = "what should I say?")
+async def say(interaction: discord.Interaction, thing_to_say: str):
+	await interaction.response.send_message(f"{interaction.user.name} said: `{thing_to_say}`")
 
-
-try:
-    client.run(TOKEN)
-except discord.errors.LoginFailure as e:
-    print("Improper token has been passed.")
+bot.run(TOKEN)
