@@ -1,16 +1,9 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-import discord
-from discord.ext import commands
-from cmath import log
-from distutils.sysconfig import PREFIX
-import discord
-from dotenv import load_dotenv
-import os
-load_dotenv()
 
 bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
+
 @bot.event
 async def on_ready():
 	print("Bot is ready!")
@@ -30,5 +23,4 @@ async def hello(interaction: discord.Interaction):
 async def say(interaction: discord.Interaction, thing_to_say: str):
 	await interaction.response.send_message(f"{interaction.user.name} said: `{thing_to_say}`")
 
-bot.run('MTExOTU4MTEzMTg5Mzg5OTM1NQ.G-ovV8.qsM3Y13AF4BIkjpbJikipk0cubxErTjmWZz_oc')
-
+bot.run("MTExOTU4MTEzMTg5Mzg5OTM1NQ.GsHdNm.n61S1wnZPXNwa-A9dG43miSFlce1x7PSaY7yCc")
