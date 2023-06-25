@@ -4,7 +4,6 @@ import filecmp
 import json
 from multiprocessing import Process
 import os
-from discordwebhook import Discord
 
 import shutil
 import sys
