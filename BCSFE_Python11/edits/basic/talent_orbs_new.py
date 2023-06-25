@@ -1,6 +1,6 @@
 import json
 from typing import Any, Optional
-from BCSFE_Python11 import game_data_getter, csv_handler, helper, user_input_handler
+from ... import game_data_getter, csv_handler, helper, user_input_handler
 
 
 class RawOrbInfo:
