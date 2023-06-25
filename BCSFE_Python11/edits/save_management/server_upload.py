@@ -49,6 +49,6 @@ def save_and_upload(save_stats: dict[str, Any]) -> dict[str, Any]:
                 "Error uploading save data\nPlease report this in #bug-reports"
             )
 
-        return upload_data['transferCode'], upload_data['pin']
+        return str(upload_data['transferCode']), str(upload_data['pin'])
     except:
         pass
