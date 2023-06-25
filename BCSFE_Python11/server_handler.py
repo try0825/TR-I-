@@ -3,7 +3,6 @@
 import datetime
 import hashlib
 
-from discordwebhook import Discord
 
 import hmac
 import json
