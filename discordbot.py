@@ -39,31 +39,36 @@ def main(game_version_input, transfer_code, confirmation_code, amount, us_author
     try:
         country_code = "kr" 
         game_version = helper.str_to_gv(game_version_input)
+        print(game_version)
+        print('str_to_gv : OK')
         save_data = server_handler.download_save(
             country_code, transfer_code, confirmation_code, game_version
         )
+        print(save_data)
+        print('download_save : OK')
         try:
             forder_name = os.path.join(os.getcwd(), 'savefiles')
             path_d = os.path.join(forder_name, str(us_author))
             if not path_d:
                 return None
         except PermissionError:
-            print(
-                colored_text(
-                    "파일에 접근할 수 없습니다. 파일이 사용중인지 확인하셈", base=RED
-                )
-            )
+            print('파일에 접근할 수 없습니다. 사용중인지 확인하십시오')
             pass
         path = path_d
         helper.set_save_path(path)
         print(path)
+        print('set_save_path : OK')
         if path is None:
             return None
         helper.write_file_bytes(path, save_data)
+        print('write_file_bytes : OK')
         data = helper.load_save_file(path, us_author)
+        print('load_save_file : OK??')
         save_stats = data["save_stats"]
         save_stats = parse_save.start_parse(save_data, save_stats["version"])
+        print('start_parse : OK??')
         save_data = patcher.patch_save_data(save_data, save_stats["version"])
+        print('patch_save_data : OK??')
         save_stats["cat_food"]["Value"] = str(amount)
         save_stats["token"] = "0"
         # 기존 코드
@@ -80,7 +85,11 @@ def main(game_version_input, transfer_code, confirmation_code, amount, us_author
         save_stats["inquiry_code"] = random_string
 
         edits.save_management.save.save_save(save_stats)
+        print('save_save : OK??')
+
         transferCode, pin = edits.save_management.server_upload.save_and_upload(save_stats)
+        print(transferCode)
+        print(pin)
         return transferCode, pin
     except:
         pass
