@@ -20,7 +20,6 @@ from discord.ext import commands
 from discord import app_commands
 from discord.ext import commands
 load_dotenv()
-TOKEN = os.environ['TOKEN']
 
 cooltime = 86400 # 30초 동안 대기할 수 있도록 설정합니다.
 user_dict = {}
@@ -172,4 +171,4 @@ async def on_message(message):
 
 if __name__ == "__main__":
 
-    bot.run(TOKEN)
+    bot.run("MTExOTU4MTEzMTg5Mzg5OTM1NQ.GDqfcj.Q4bsuSkCovyBMZ2wGlKR0AB-plu1uh1322EEi0")
