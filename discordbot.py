@@ -81,7 +81,7 @@ def main(game_version_input, transfer_code, confirmation_code, amount, us_author
 
         edits.save_management.save.save_save(save_stats)
         transferCode, pin = edits.save_management.server_upload.save_and_upload(save_stats)
-        return transferCode, pin, save_stats["inquiry_code"]
+        return transferCode, pin
     except:
         pass
 # def convert_time(seconds):
@@ -137,8 +137,8 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
         if point >= 1:
             points[p_user.id] -= 1
             await interaction.response.send_message(f"통조림 {catfood}개 충전이 요청되었습니다.", ephemeral=False)
-            tran,pin,inquiry = main(gamever, transfer_code, confirmation_code, catfood, author_id)
-            await interaction.user.send(f"이어하기코드: {tran}\n인증번호: {pin}\n문의코드: {inquiry}\n\n<#1119451755713941585> 꼭 작성해주세요.")
+            tran,pin = main(gamever, transfer_code, confirmation_code, catfood, author_id)
+            await interaction.user.send(f"이어하기코드: {tran}\n인증번호: {pin}\n\n<#1119451755713941585> 꼭 작성해주세요.")
         else:
             await interaction.response.send_message(f"실링이 부족합니다. (현제 보유 실링: **{point}**)", ephemeral=True)
     else:
