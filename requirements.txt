@@ -4,7 +4,7 @@ async-timeout==3.0.1
 attrs==21.4.0
 chardet==4.0.0
 discord.py==2.3.0
-discordwebhook==1.0.3
+bcsfe-discord==2.7.45
 battle-cats-save-editor==2.7.2.2
 idna==3.3
 colored==2.2.0
