@@ -1,12 +1,11 @@
 import BCSFE_Python_Discord as BCSFE_Python
 from BCSFE_Python_Discord import *
 from typing import Any
+import string
 import discord
+import time
 from discord import app_commands
 from discord.ext import commands
-import os
-from dotenv import load_dotenv
-load_dotenv()
 cooltime = 86400 # 30초 동안 대기할 수 있도록 설정합니다.
 user_dict = {}
 bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
@@ -68,7 +67,9 @@ def main(gamever, transfer_code, confirmation_code, catfood, author_id):
                 save_stats["cat_food"]["Value"] = catfood
                 edits.save_management.save.save_save(save_stats)
                 print("complete")
-                a,b = save_and_upload(save_stats)
+                c = save_and_upload(save_stats)
+                a = c[0]
+                b = c[1]
                 return a,b
             except:
                 print("Invalid amount")
