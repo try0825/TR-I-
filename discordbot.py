@@ -5,6 +5,7 @@ import string
 import discord
 import time
 from discord import app_commands
+import os
 from discord.ext import commands
 cooltime = 86400 # 30초 동안 대기할 수 있도록 설정합니다.
 user_dict = {}
