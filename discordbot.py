@@ -44,8 +44,8 @@ def main(gamever, transfer_code, confirmation_code, catfood, author_id):
                 helper.colored_text(
                     "Error uploading save data\nPlease report this in #bug-reports"
                 )
-
-        print(upload_data['transferCode'], upload_data['pin'])
+	    else:
+       	        print(upload_data['transferCode'], upload_data['pin'])
         except:
             pass
     try: 
