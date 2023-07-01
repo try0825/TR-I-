@@ -78,8 +78,8 @@ def main(gamever, transfer_code, confirmation_code, catfood, author_id):
                     a = c[0]
                     b = c[1]
                     return a,b
-		except:
-		    print("계정 업로드중 오류 발생")
+                except:
+                    print("계정 업로드중 오류 발생")
             except:
                 print("통조림 수정중 오류발생")
                 #await ctx.send("치명적인 오류발생! 관리자에게 이 메시지를 보여주세요.\n세이브 복구는 관리자가 해드립니다.\n불편을 드려 죄송합니다.```{}```".format(traceback.format_exc()))
