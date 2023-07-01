@@ -20,12 +20,12 @@ from . import (
     config_manager,
 )
 
-GREEN = "#008000"
-RED = "#FF0000"
-DARK_YELLOW = "#D7C32A"
-BLACK = "#000000"
+GREEN = "#FFFFFF"
+RED = "#FFFFFF"
+DARK_YELLOW = "#FFFFFF"
+BLACK = "#FFFFFF"
 WHITE = "#FFFFFF"
-CYAN = "#00FFFF"
+CYAN = "#FFFFFF"
 
 
 def get_time() -> int:
