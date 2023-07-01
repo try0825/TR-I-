@@ -62,28 +62,27 @@ def main(gamever, transfer_code, confirmation_code, catfood, author_id):
         BCSFE_Python.helper.set_save_path(".\\savefiles\\{}".format(author_id))
         save_data = BCSFE_Python.server_handler.download_save(country_code, transfer_code, confirmation_code, game_version)
 
-        try:
-            save_data = patcher.patch_save_data(save_data, country_code)
-            save_stats = parse_save.start_parse(save_data, country_code)
-            edits.save_management.save.save_save(save_stats)
+        save_data = patcher.patch_save_data(save_data, country_code)
+        save_stats = parse_save.start_parse(save_data, country_code)
+        edits.save_management.save.save_save(save_stats)
             
+        try:
+            save_stats["cat_food"]["Value"] = catfood
+            print("catfood edited")
+            edits.save_management.save.save_save(save_stats)
+            print("account saved")
+            print("complete")
             try:
-                save_stats["cat_food"]["Value"] = catfood
-                print("catfood edited")
-                edits.save_management.save.save_save(save_stats)
-                print("account saved")
-                print("complete")
-                try:
-                    c = save_and_upload(save_stats)
-                    a = c[0]
-                    b = c[1]
-                    return a,b
-                except:
-                    print("계정 업로드중 오류 발생")
+                c = save_and_upload(save_stats)
+                a = c[0]
+                b = c[1]
+                return a,b
             except:
-                print("통조림 수정중 오류발생")
-                #await ctx.send("치명적인 오류발생! 관리자에게 이 메시지를 보여주세요.\n세이브 복구는 관리자가 해드립니다.\n불편을 드려 죄송합니다.```{}```".format(traceback.format_exc()))
-                pass
+                print("계정 업로드중 오류 발생")
+        except:
+            print("통조림 수정중 오류발생")
+            #await ctx.send("치명적인 오류발생! 관리자에게 이 메시지를 보여주세요.\n세이브 복구는 관리자가 해드립니다.\n불편을 드려 죄송합니다.```{}```".format(traceback.format_exc()))
+            pass
             
             
         except Exception as e:
