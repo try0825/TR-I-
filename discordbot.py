@@ -1,5 +1,6 @@
-import BCSFE_Python_Discord as BCSFE_Python
-from BCSFE_Python_Discord import *
+from me import *
+import random, requests, datetime, sys
+import os
 from typing import Any
 import os
 import string
@@ -23,62 +24,27 @@ def convert_time(seconds):
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
 
-def save_and_upload(save_stats: dict[str, Any]) -> dict[str, Any]:
-    """Serialise the save data, and upload it to the game server"""
-
-    save_data = serialise_save.start_serialize(save_stats)
-    save_data = helper.write_save_data(
-        save_data, save_stats["version"], helper.get_save_path(), False
-    )
-    upload_data = server_handler.upload_handler(save_stats, helper.get_save_path())
-    if upload_data is None:
-        helper.colored_text(
-            "Error uploading save data\nPlease report this in #bug-reports"
-        )
-        return save_stats
-    if "transferCode" not in upload_data:
-        helper.colored_text(
-            "Error uploading save data\nPlease report this in #bug-reports"
-        )
-    if len(upload_data["transferCode"]) < 5:
-        helper.colored_text(
-            "Error uploading save data\nPlease report this in #bug-reports"
-        )
-    else:
-        helper.colored_text(f"Transfer code : &{upload_data['transferCode']}&")
-        helper.colored_text(f"Confirmation Code : &{upload_data['pin']}&")
-
-    return save_stats
-def main(gamever, transfer_code, confirmation_code, catfood, author_id):
+def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
     country_code_input = "kr"
-    game_version_input = gamever
+    game_version_input = in_gamever
     country_code = country_code_input
     game_version = helper.str_to_gv(game_version_input)
-    transfer_code = transfer_code
-    confirmation_code = confirmation_code
+    transfer_code = in_transfer_code
+    confirmation_code = in_confirmation_code
+    save_data = server_handler.download_save(country_code, transfer_code, confirmation_code, game_version)
 
-    BCSFE_Python.helper.set_save_path(".\\savefiles\\{}".format(author_id))
-    save_data = BCSFE_Python.server_handler.download_save(country_code, transfer_code, confirmation_code, game_version)
-
-    save_data = patcher.patch_save_data(save_data, country_code)
-    save_stats = parse_save.start_parse(save_data, country_code)
-    print("save_stats 선언 성공")
-    edits.save_management.save.save_save(save_stats)
-    print("계정 1차 세이브 성공")
-
-    save_stats["cat_food"]["Value"] = catfood
-    print("catfood edited")
-    edits.save_management.save.save_save(save_stats)
-    print("account saved")
-    print("complete")
-    c = save_and_upload(save_stats)
-    a = c[0]
-    b = c[1]
-    print(f"이어하기코드: {a} 인증번호 : {b}")
-    return a,b
-    #await ctx.send("치명적인 오류발생! 관리자에게 이 메시지를 보여주세요.\n세이브 복구는 관리자가 해드립니다.\n불편을 드려 죄송합니다.```{}```".format(traceback.format_exc()))
-
-
+    try:
+        save_data = patcher.patch_save_data(save_data, country_code)
+        save_stats = parse_save.start_parse(save_data, country_code)
+        
+        save_stats["cat_food"]["Value"] = int(in_catfood)
+        transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
+        return transfercode, account_pin
+    except Exception as e:
+        print("invalid code")
+        print("===================================================================================")
+        print(e)
+        print("===================================================================================")
 
 @bot.event
 async def on_ready():
@@ -101,7 +67,7 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
         if point >= 1:
             points[p_user.id] -= 1
             await interaction.response.send_message(f"통조림 {catfood}개 충전이 요청되었습니다.", ephemeral=False)
-            tran,pin = main(gamever, transfer_code, confirmation_code, catfood, author_id)
+            tran,pin = main(gamever, transfer_code, confirmation_code, catfood)
             await interaction.user.send(f"이어하기코드: {tran}\n인증번호: {pin}\n<#1119451755713941585> 꼭 작성해주세요.")
         else:
             await interaction.response.send_message(f"실링이 부족합니다. (현제 보유 실링: **{point}**)", ephemeral=True)
@@ -155,8 +121,5 @@ async def on_message(message):
         embedVar.add_field(name="",value=f"{member.name}님에게 **1sl**를 차감하였습니다.\n**잔여 :{points[member.id]}sl**",inline=False)
         await message.channel.send(embed=embedVar)
         await message.delete()
-
-
-
 if __name__ == "__main__":
     bot.run(TOKEN)
