@@ -75,7 +75,7 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
         else:
             await interaction.response.send_message("통조림 충전 요청은 <#1122288430664130560>에서 해주세요.", ephemeral=True)
     except Exception as e:
-	points[p_user.id] += 1
+	points[interaction.user.id] += 1
         embedVar = discord.Embed(title="계정 오류", color=0xffec42)
         embedVar.add_field(name="",value="이어하기코드,인증번호를 다시 확인해주세요.",inline=False)
         embedVar.add_field(name="",value="사용된 실링은 복구됩니다.",inline=False)
