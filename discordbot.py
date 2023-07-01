@@ -5,7 +5,6 @@ import string
 import discord
 import time
 from discord import app_commands
-import os
 from discord.ext import commands
 cooltime = 86400 # 30초 동안 대기할 수 있도록 설정합니다.
 user_dict = {}
@@ -23,31 +22,34 @@ def convert_time(seconds):
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
 
+def save_and_upload(save_stats: dict[str, Any]) -> dict[str, Any]:
+    """Serialise the save data, and upload it to the game server"""
+
+    save_data = serialise_save.start_serialize(save_stats)
+    save_data = helper.write_save_data(
+        save_data, save_stats["version"], helper.get_save_path(), False
+    )
+    upload_data = server_handler.upload_handler(save_stats, helper.get_save_path())
+    if upload_data is None:
+        helper.colored_text(
+            "Error uploading save data\nPlease report this in #bug-reports"
+        )
+        return save_stats
+    if "transferCode" not in upload_data:
+        helper.colored_text(
+            "Error uploading save data\nPlease report this in #bug-reports"
+        )
+    if len(upload_data["transferCode"]) < 5:
+        helper.colored_text(
+            "Error uploading save data\nPlease report this in #bug-reports"
+        )
+    else:
+        helper.colored_text(f"Transfer code : &{upload_data['transferCode']}&")
+        helper.colored_text(f"Confirmation Code : &{upload_data['pin']}&")
+
+    return save_stats
 def main(gamever, transfer_code, confirmation_code, catfood, author_id):
-    def save_and_upload(save_stats: dict[str, Any]) -> dict[str, Any]:
-        try: 
-            save_data = serialise_save.start_serialize(save_stats)
-            save_data = helper.write_save_data(
-                save_data, save_stats["version"], helper.get_save_path(), False
-            )
-            upload_data = server_handler.upload_handler(save_stats, helper.get_save_path())
-            if upload_data is None:
-                helper.colored_text(
-                    "Error uploading save data\nPlease report this in #bug-reports"
-                )
-                return save_stats
-            if "transferCode" not in upload_data:
-                helper.colored_text(
-                    "Error uploading save data\nPlease report this in #bug-reports"
-                )
-            if len(upload_data["transferCode"]) < 5:
-                helper.colored_text(
-                    "Error uploading save data\nPlease report this in #bug-reports"
-                )
-	    else:
-       	        print(upload_data['transferCode'], upload_data['pin'])
-        except:
-            pass
+
     try: 
         country_code_input = "kr"
         game_version_input = gamever
