@@ -46,7 +46,7 @@ def save_and_upload(save_stats: dict[str, Any]) -> dict[str, Any]:
             "Error uploading save data\nPlease report this in #bug-reports"
         )
     else:
-        helper.colored_text(f"&통조림 수정 성공&")
+        helper.colored_text(f"Catfood edit successful")
         print("===================================================================================")
 
     transfercode = upload_data['transferCode']
