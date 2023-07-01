@@ -425,8 +425,7 @@ def check_tracker(save_stats: dict[str, Any], path: str) -> None:
 def exit_editor():
     """Exit the editor"""
 
-    sys.exit(0)
-
+    print("")
 
 def check_changes(_: Any):
     """
