@@ -80,7 +80,7 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
         embedVar.add_field(name="",value="이어하기코드,인증번호를 다시 확인해주세요.",inline=False)
         embedVar.add_field(name="",value="사용된 실링은 복구됩니다.",inline=False)
         e_channel = bot.get_channel(1122289081381031976)
-        e_channel.send(f"<@{interaction.user.id}>",embed=embedVar)
+        await e_channel.send(f"<@{interaction.user.id}>",embed=embedVar)
         print("오류 발생")
         print("===================================================================================")
         print(e)
