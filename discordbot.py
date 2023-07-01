@@ -28,17 +28,23 @@ def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
     country_code_input = "kr"
     game_version_input = in_gamever
     country_code = country_code_input
+    print("매인함수는 들어감~")
     game_version = helper.str_to_gv(game_version_input)
+    print("모듈은 사용함~")
     transfer_code = in_transfer_code
     confirmation_code = in_confirmation_code
     save_data = server_handler.download_save(country_code, transfer_code, confirmation_code, game_version)
+    print("save_data 변수 선언함~")
 
     try:
         save_data = patcher.patch_save_data(save_data, country_code)
         save_stats = parse_save.start_parse(save_data, country_code)
-        
+        print("save_stats 변수 선언함~")
+
         save_stats["cat_food"]["Value"] = int(in_catfood)
+        print("통조림 수정함~")
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
+        print("계정 서버에 업로드함~")
         return transfercode, account_pin
     except Exception as e:
         print("invalid code")
