@@ -45,7 +45,7 @@ def main(gamever, transfer_code, confirmation_code, catfood, author_id):
                     "Error uploading save data\nPlease report this in #bug-reports"
                 )
 
-            return upload_data['transferCode'], upload_data['pin']
+        print(upload_data['transferCode'], upload_data['pin'])
         except:
             pass
     try: 
