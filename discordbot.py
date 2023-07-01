@@ -1,6 +1,7 @@
 import BCSFE_Python_Discord as BCSFE_Python
 from BCSFE_Python_Discord import *
 from typing import Any
+import os
 import string
 import discord
 import time
