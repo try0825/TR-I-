@@ -69,15 +69,15 @@ def main(gamever, transfer_code, confirmation_code, catfood, author_id):
             
             try:
                 save_stats["cat_food"]["Value"] = catfood
-		print("catfood edited")
+                print("catfood edited")
                 edits.save_management.save.save_save(save_stats)
-		print("account saved")
+                print("account saved")
                 print("complete")
-		try:
-	                c = save_and_upload(save_stats)
-	                a = c[0]
-	                b = c[1]
-	                return a,b
+                try:
+                    c = save_and_upload(save_stats)
+                    a = c[0]
+                    b = c[1]
+                    return a,b
 		except:
 		    print("계정 업로드중 오류 발생")
             except:
