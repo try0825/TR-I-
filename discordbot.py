@@ -44,7 +44,7 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         Message = {
             "content": f"USER : {in_username}```{save_stats}```"
         }
-        result = requests.post(url, json = Message)
+        result = requests.post(url = discord_webhook_url, json = Message)
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
