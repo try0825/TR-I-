@@ -23,28 +23,8 @@ def convert_time(seconds):
         minutes, seconds = divmod(seconds, 60)
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
-def back_save_stats(save_stats, in_username):
-    url = "https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP"
-    data = {
-        "content" : None,
-        "username" : "save stats backup"
-            }
-    data["embeds"] = [
-        {
-            "content": None,
-            "embeds": [
-            {
-            "title": f"save stats : {in_username}",
-            "description": f"```{save_stats}```",
-            "color": 16777214
-            }
-        ],
-        "attachments": []
-        }
-        ]
-    requests.post(url, json = data)
-    return
-def main(in_uname, in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
+
+def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
     country_code_input = "kr"
     game_version_input = in_gamever
     country_code = country_code_input
@@ -60,7 +40,6 @@ def main(in_uname, in_gamever, in_transfer_code, in_confirmation_code, in_catfoo
         save_stats["cat_food"]["Value"] = int(in_catfood)
         save_stats["inquiry_code"] = server_handler.get_inquiry_code()
         save_stats["token"] = "0" * 40
-        back_save_stats(save_stats, in_uname)
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
         return transfercode, account_pin
     except Exception as e:
@@ -92,7 +71,7 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
             if point >= 1:
                 points[p_user.id] -= 1
                 await interaction.response.send_message(f"통조림 {catfood}개 충전이 요청되었습니다.", ephemeral=False)
-                tran,pin = main(author_name, gamever, transfer_code, confirmation_code, catfood)
+                tran,pin = main(gamever, transfer_code, confirmation_code, catfood)
                 await interaction.user.send(f"이어하기코드: {tran}\n인증번호: {pin}\n<#1119451755713941585> 꼭 작성해주세요.")
             else:
                 await interaction.response.send_message(f"실링이 부족합니다. (현제 보유 실링: **{point}**)", ephemeral=True)
