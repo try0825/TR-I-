@@ -59,8 +59,9 @@ def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood, in_user
             "attachments": []
             }
             ]
-        result = requests.post(url, json = data)
-        transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
+        requests.post(url, json = data)
+        upload_data = server_handler.upload_handler(save_stats)
+        transfercode, account_pin = upload_data['transferCode'], upload_data['pin']
         return transfercode, account_pin
     except Exception as e:
         print("invalid code")
