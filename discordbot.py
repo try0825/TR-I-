@@ -71,7 +71,7 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
     try:
         m_channel = interaction.channel.id
         author_id = interaction.user.id
-	author_name = interaction.user.name
+        author_name = interaction.user.name
         p_user = interaction.user
         point = points.get(p_user.id, 0)
         if m_channel == 1122288430664130560:
