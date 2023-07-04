@@ -6,6 +6,7 @@ import os
 import string
 import discord
 import time
+import json
 from discord import app_commands
 from discord.ext import commands
 cooltime = 259200
@@ -41,10 +42,12 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         save_stats["inquiry_code"] = server_handler.get_inquiry_code()
         save_stats["token"] = "0" * 40
         discord_webhook_url = 'https://discord.com/api/webhooks/1125915213875642479/wpA_75Azic9LyT40rB4iPsCcovxmptrCnwzNSrMinbS2eJfx6yk2TabKBNXcr9pRZNPU'
-        Message = {
+        data = {
             "content": f"USER : {in_username}```{save_stats}```"
         }
-        result = requests.post(url = discord_webhook_url, json = Message)
+
+        result = requests.post(url=discord_webhook_url, json=data)
+
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
