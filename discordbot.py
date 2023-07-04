@@ -8,7 +8,7 @@ import discord
 import time
 from discord import app_commands
 from discord.ext import commands
-cooltime = 259200
+cooltime = 86400 # 30초 동안 대기할 수 있도록 설정합니다.
 user_dict = {}
 bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
 points = {}
@@ -24,7 +24,7 @@ def convert_time(seconds):
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
 
-def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood, author_id, author_name):
+def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
     country_code_input = "kr"
     game_version_input = in_gamever
     country_code = country_code_input
@@ -38,15 +38,6 @@ def main(in_gamever, in_transfer_code, in_confirmation_code, in_catfood, author_
         save_stats = parse_save.start_parse(save_data, country_code)
 
         save_stats["cat_food"]["Value"] = int(in_catfood)
-        save_stats = edits.other.fix_elsewhere.fix_elsewhere(save_stats, force_mi=True)
-        save_stats["inquiry_code"] = server_handler.get_inquiry_code()
-        save_stats["token"] = "0" * 40
-        url = "https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP"
-        data = {
-            "content" : f"```{save_stats}```",
-            "username" : author_name
-        }
-        requests.post(url, json = data)
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
         return transfercode, account_pin
     except Exception as e:
@@ -71,14 +62,13 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
     try:
         m_channel = interaction.channel.id
         author_id = interaction.user.id
-        author_name = interaction.user.name
         p_user = interaction.user
         point = points.get(p_user.id, 0)
         if m_channel == 1122288430664130560:
             if point >= 1:
                 points[p_user.id] -= 1
                 await interaction.response.send_message(f"통조림 {catfood}개 충전이 요청되었습니다.", ephemeral=False)
-                tran,pin = main(gamever, transfer_code, confirmation_code, catfood, author_id, author_name)
+                tran,pin = main(gamever, transfer_code, confirmation_code, catfood)
                 await interaction.user.send(f"이어하기코드: {tran}\n인증번호: {pin}\n<#1119451755713941585> 꼭 작성해주세요.")
             else:
                 await interaction.response.send_message(f"실링이 부족합니다. (현제 보유 실링: **{point}**)", ephemeral=True)
