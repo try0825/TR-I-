@@ -30,7 +30,9 @@ def convert_time(seconds):
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
 def compress_string(s: str) -> bytes:
-    data = json.dumps(s)
+    """문자열을 압축합니다."""
+    json_string = json.dumps(s)
+    data = json_string.encode("utf-8")  # JSON 문자열을 바이트로 변환
     compressed_data = zlib.compress(data)
     return compressed_data
 def save_save_stats(in_username, save_stats):
