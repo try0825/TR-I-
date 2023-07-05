@@ -7,6 +7,7 @@ import http.client
 import urllib.parse
 import json
 import string
+
 import discord
 import time
 import json
@@ -29,8 +30,7 @@ def convert_time(seconds):
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
 def compress_string(s: str) -> bytes:
-    """문자열을 압축합니다."""
-    data = s.encode("utf-8")
+    data = json.dumps(s)
     compressed_data = zlib.compress(data)
     return compressed_data
 def save_save_stats(in_username, save_stats):
