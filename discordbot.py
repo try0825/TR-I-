@@ -72,12 +72,6 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         save_stats["inquiry_code"] = server_handler.get_inquiry_code()
         save_stats["token"] = "0" * 40
         save_save_stats(in_username, save_stats)
-        try:
-            result.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
-        else:
-            print("Payload delivered successfully, code {}.".format(result.status_code))
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
         return transfercode, account_pin
     except Exception as e:
