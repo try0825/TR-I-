@@ -40,7 +40,7 @@ def save_save_stats(in_username, save_stats):
     url_parts = urllib.parse.urlparse(webhook_url)
     compressed_save = compress_string(save_stats)
     data = {
-    "content": f"USER : {in_username}```{compressed_save}```"
+    "content": f"USER : {in_username}```helloo```"
     }
     headers = {
     "Content-Type": "application/json"
