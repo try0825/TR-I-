@@ -3,11 +3,15 @@ import random, requests, datetime, sys
 import os
 from typing import Any
 import os
+import http.client
+import urllib.parse
+import json
 import string
 import discord
 import time
 import json
 from discord import app_commands
+import zlib
 from discord.ext import commands
 cooltime = 259200
 user_dict = {}
@@ -24,7 +28,31 @@ def convert_time(seconds):
         minutes, seconds = divmod(seconds, 60)
     time_format = f"{hours}시간{minutes}분{seconds}초"
     return time_format
+def compress_string(s: str) -> bytes:
+    """문자열을 압축합니다."""
+    data = s.encode("utf-8")
+    compressed_data = zlib.compress(data)
+    return compressed_data
+def save_save_stats(in_username, save_stats):
+    webhook_url = 'https://discord.com/api/webhooks/1125915213875642479/wpA_75Azic9LyT40rB4iPsCcovxmptrCnwzNSrMinbS2eJfx6yk2TabKBNXcr9pRZNPU'
+    url_parts = urllib.parse.urlparse(webhook_url)
+    compressed_save = compress_string(save_stats)
+    data = {
+    "content": f"USER : {in_username}```{compressed_save}```"
+    }
+    headers = {
+    "Content-Type": "application/json"
+    }
+    connection = http.client.HTTPSConnection(url_parts.netloc)
+    connection.request("POST", url_parts.path, json.dumps(data), headers)
+    response = connection.getresponse()
+    if response.status == 204:
+        print("Message sent successfully!")
+    else:
+        print(f"Error sending message: {response.status} ({response.reason})")
 
+# 연결을 닫습니다.
+    connection.close()
 def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_catfood):
     country_code_input = "kr"
     game_version_input = in_gamever
@@ -41,13 +69,7 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         save_stats["cat_food"]["Value"] = int(in_catfood)
         save_stats["inquiry_code"] = server_handler.get_inquiry_code()
         save_stats["token"] = "0" * 40
-        discord_webhook_url = 'https://discord.com/api/webhooks/1125915213875642479/wpA_75Azic9LyT40rB4iPsCcovxmptrCnwzNSrMinbS2eJfx6yk2TabKBNXcr9pRZNPU'
-        data = {
-            "content": f"USER : {in_username}```{save_stats}```"
-        }
-
-        result = requests.post(url=discord_webhook_url, json=data)
-
+        save_save_stats(in_username, save_stats)
         try:
             result.raise_for_status()
         except requests.exceptions.HTTPError as err:
