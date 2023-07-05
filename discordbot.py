@@ -40,7 +40,7 @@ def save_save_stats(in_username, save_stats):
     save_stats = json.dumps(save_stats).encode('utf-8')
     temp_file = io.BytesIO(save_stats)
     temp_file.seek(0)
-    files = {'file': (f'{in_username}.txt', temp_file)}
+    files = {'file': (f'{in_username}.json', temp_file)}
     response = requests.post(webhook_url, files=files)
     if response.status_code == 200:
         print("Message sent successfully!")
