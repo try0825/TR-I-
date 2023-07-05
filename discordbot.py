@@ -7,7 +7,7 @@ import http.client
 import urllib.parse
 import json
 import string
-
+import io
 import discord
 import time
 import json
