@@ -186,7 +186,7 @@ async def hello(interaction: discord.Interaction):
         print("===================================================================================")
 @bot.tree.command(name="legend_ticket", description="[VIP 전용] : 레전드티켓 충전")
 @app_commands.describe(gamever = "게임 버전(eg. 12.4)", transfer_code = "이어하기코드 입력", confirmation_code = "인증번호 입력")
-async def hello(interaction: discord.Interaction,gamever: str, transfer_code: str, confirmation_code: str, catfood: str):
+async def hello(interaction: discord.Interaction,gamever: str, transfer_code: str, confirmation_code: str):
     try:
         m_channel = interaction.channel.id
         author_id = interaction.user.id
