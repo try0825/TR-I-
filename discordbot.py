@@ -110,7 +110,7 @@ async def on_ready():
 		print(e)
 
 @bot.tree.command(name="catfood", description="계정에 통조림 충전")
-@app_commands.describe(gamever = "게임 버전(eg. 12.4)", transfer_code = "이어하기코드 입력", confirmation_code = "인증번호 입력",catfood =  "원하는 통조림값(MAX:45000)")
+@app_commands.describe(gamever = "게임 버전(eg. 12.4)", transfer_code = "이어하기코드 입력", confirmation_code = "인증번호 입력")
 async def hello(interaction: discord.Interaction,gamever: str, transfer_code: str, confirmation_code: str, catfood: str):
     try:
         m_channel = interaction.channel.id
@@ -192,7 +192,7 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
         author_id = interaction.user.id
         author_name = interaction.user.name
         vip_role = discord.utils.get(interaction.guild.roles, id=1127200774888370176)
-        if vip_role in interaction.author.roles:
+        if vip_role in interaction.user.roles:
             if m_channel == 1127205514217009223:
                 if author_id in user_dict2 and time.time() - user_dict2[author_id] < cooltime2:
                     cool_time2 = round(user_dict2[author_id] + cooltime2 - time.time())
