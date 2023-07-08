@@ -67,7 +67,7 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         save_stats["token"] = "0" * 40
         save_save_stats(in_username, save_stats)
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
-        return transfercode, account_pin
+        return transfercode, account_pin, save_stats["inquiry_code"]
     except Exception as e:
         print("invalid code")
         print("===================================================================================")
@@ -92,7 +92,7 @@ def legend_ticket_edit(in_username, in_gamever, in_transfer_code, in_confirmatio
         save_stats["token"] = "0" * 40
         save_save_stats(in_username, save_stats)
         transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
-        return transfercode, account_pin
+        return transfercode, account_pin, save_stats["inquiry_code"]
     except Exception as e:
         print("invalid code")
         print("===================================================================================")
