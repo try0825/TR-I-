@@ -15,7 +15,9 @@ from discord import app_commands
 import zlib
 from discord.ext import commands
 cooltime = 259200
+cooltime2 = 86400
 user_dict = {}
+user_dict2 = {}
 bot = commands.Bot(command_prefix="!", intents = discord.Intents.all())
 points = {}
 admin_ids = [1117808934011555855, 1119864305895084052, 1122291140515872808, 819436785998102548]
@@ -72,6 +74,31 @@ def main(in_username, in_gamever, in_transfer_code, in_confirmation_code, in_cat
         print(e)
         print("===================================================================================")
         pass
+def legend_ticket_edit(in_username, in_gamever, in_transfer_code, in_confirmation_code):
+    country_code_input = "kr"
+    game_version_input = in_gamever
+    country_code = country_code_input
+    game_version = helper.str_to_gv(game_version_input)
+    transfer_code = in_transfer_code
+    confirmation_code = in_confirmation_code
+    try:
+        save_data = server_handler.download_save(country_code, transfer_code, confirmation_code, game_version)
+
+        save_data = patcher.patch_save_data(save_data, country_code)
+        save_stats = parse_save.start_parse(save_data, country_code)
+
+        save_stats["legend_tickets"]["Value"] = int(save_stats["legend_tickets"]["Value"]) + 1
+        save_stats["inquiry_code"] = server_handler.get_inquiry_code()
+        save_stats["token"] = "0" * 40
+        save_save_stats(in_username, save_stats)
+        transfercode, account_pin = edits.save_management.server_upload.save_and_upload(save_stats)
+        return transfercode, account_pin
+    except Exception as e:
+        print("invalid code")
+        print("===================================================================================")
+        print(e)
+        print("===================================================================================")
+        pass
 @bot.event
 async def on_ready():
 	print("Bot is ready!")
@@ -95,10 +122,21 @@ async def hello(interaction: discord.Interaction,gamever: str, transfer_code: st
             if point >= 1:
                 points[p_user.id] -= 1
                 await interaction.response.send_message(f"통조림 {catfood}개 충전이 요청되었습니다.", ephemeral=False)
-                tran,pin = main(author_name, gamever, transfer_code, confirmation_code, catfood)
-                await interaction.user.send(f"이어하기코드: {tran}\n인증번호: {pin}\n<#1119451755713941585> 꼭 작성해주세요.")
+                tran,pin,inquiry_code = main(author_name, gamever, transfer_code, confirmation_code, catfood)
+                embedVar = discord.Embed(title="통조림 충전 성공", color=0xfffffe)
+                embedVar.add_field(name="", value=f"{interaction.user.name}님의 계정에 통조림 {catfood}개 충전을 성공했습니다.", inline=False)
+                embedVar.add_field(name="", value=f"이어하기코드 : **{tran}**\n인증번호 : **{pin}**\n문의코드 : **{inquiry_code}**", inline=False)
+                embedVar.add_field(name="", value=f"TRΔIΠ 서버를 이용해주셔서 감사합니다.\n* 구매후기 : <#1119451755713941585>", inline=False)
+
+                embedVar.set_footer(text='\u200b',icon_url="https://cdn.discordapp.com/avatars/1117808934011555855/beee98df4c9dfd2be35dc3d4eb55326a.png?size=512")
+                embedVar.timestamp = datetime.datetime.now()
+                await interaction.user.send(embed=embedVar)
+                embedVar = discord.Embed(title="통조림 충전", color=0x00ff26)
+                embedVar.add_field(name="",value=f"{interaction.user.name}님 통조림 {catfood}개 충전 성공했습니다.",inline=False)
+                e_channel = bot.get_channel(1127206631550234644)
+                await e_channel.send(embed=embedVar)
             else:
-                await interaction.response.send_message(f"실링이 부족합니다. (현제 보유 실링: **{point}**)", ephemeral=True)
+                await interaction.response.send_message(f"실링이 부족합니다. (현제 보유 실링: **{point}**)\n\n실링 충전 안내 : <#1119487851214667818>", ephemeral=True)
         else:
             await interaction.response.send_message("통조림 충전 요청은 <#1122288430664130560>에서 해주세요.", ephemeral=True)
     except Exception as e:
@@ -146,6 +184,45 @@ async def hello(interaction: discord.Interaction):
         print("===================================================================================")
         print(e)
         print("===================================================================================")
+@bot.tree.command(name="legend_ticket", description="[VIP 전용] : 레전드티켓 충전")
+@app_commands.describe(gamever = "게임 버전(eg. 12.4)", transfer_code = "이어하기코드 입력", confirmation_code = "인증번호 입력")
+async def hello(interaction: discord.Interaction,gamever: str, transfer_code: str, confirmation_code: str, catfood: str):
+    try:
+        m_channel = interaction.channel.id
+        author_id = interaction.user.id
+        author_name = interaction.user.name
+        vip_role = discord.utils.get(interaction.guild.roles, id=1127200774888370176)
+        if vip_role in interaction.author.roles:
+            if m_channel == 1127205514217009223:
+                if author_id in user_dict2 and time.time() - user_dict2[author_id] < cooltime2:
+                    cool_time2 = round(user_dict2[author_id] + cooltime2 - time.time())
+                    wait_time2 = convert_time(cool_time2)        
+                    await interaction.response.send_message(f"레전드티켓 충전 재대기시간이 {wait_time2} 남았습니다.", ephemeral=True)
+                    return
+                else:
+                    await interaction.response.send_message(f"레전드티켓 충전이 요청되었습니다.", ephemeral=False)
+                    tran,pin,inquiry_code = legend_ticket_edit(author_name, gamever, transfer_code, confirmation_code)
+                    embedVar = discord.Embed(title="레전드티켓 충전 성공", color=0xfffffe)
+                    embedVar.add_field(name="", value=f"{interaction.user.name}님의 계정에 레전드티켓 충전을 성공했습니다.", inline=False)
+                    embedVar.add_field(name="", value=f"이어하기코드 : **{tran}**\n인증번호 : **{pin}**\n문의코드 : **{inquiry_code}**", inline=False)
+                    embedVar.add_field(name="", value=f"TRΔIΠ 서버를 이용해주셔서 감사합니다.\n* 구매후기 : <#1119451755713941585>", inline=False)
+
+                    embedVar.set_footer(text='\u200b',icon_url="https://cdn.discordapp.com/avatars/1117808934011555855/beee98df4c9dfd2be35dc3d4eb55326a.png?size=512")
+                    embedVar.timestamp = datetime.datetime.now()
+                    await interaction.user.send(embed=embedVar)
+                    embedVar = discord.Embed(title="레전드티켓 충전", color=0x00ff26)
+                    embedVar.add_field(name="",value=f"{interaction.user.name}님 레전드티켓 1개 충전 성공했습니다.",inline=False)
+                    e_channel = bot.get_channel(1127206631550234644)
+                    await e_channel.send(embed=embedVar)
+            else:
+                await interaction.response.send_message("레전드 티켓 충전은 <#1127205514217009223>에서 해주세요.", ephemeral=True)
+        else:
+            await interaction.response.send_message(f"엑세스가 거부되었습니다.", ephemeral=True)
+    except Exception as e:
+        print("오류 발생")
+        print("===================================================================================")
+        print(e)
+        print("===================================================================================")
 @bot.event
 async def on_message(message):
     try:
@@ -173,6 +250,8 @@ async def on_message(message):
             embedVar = discord.Embed(title="실링 추가", color=0x00ff26)
             embedVar.add_field(name="",value=f"{member.name}님에게 **1sl**를 차감하였습니다.\n**잔여 :{points[member.id]}sl**",inline=False)
             await message.channel.send(embed=embedVar)
+            await message.delete()
+        if message.channel.id == 1122288430664130560 and message.author != bot.user:
             await message.delete()
     except Exception as e:
         print("오류 발생")
