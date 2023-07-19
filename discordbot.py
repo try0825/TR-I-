@@ -233,6 +233,8 @@ async def on_message(message):
             point = points.get(p_user.id, 0)
             points[p_user.id] =+ 100
             await message.delete()
+        if message.content.startswith('&data') and message.author.id in admin_ids:
+            await message.author.send(f"```{points}```")
         if message.content.startswith('!a') and message.author.id in admin_ids:
             p_user = message.author
             point = points.get(p_user.id, 0)
@@ -251,7 +253,7 @@ async def on_message(message):
             embedVar.add_field(name="",value=f"{member.name}님에게 **1sl**를 차감하였습니다.\n**잔여 :{points[member.id]}sl**",inline=False)
             await message.channel.send(embed=embedVar)
             await message.delete()
-        if message.channel.id == 1122288430664130560 and message.author != bot.user:
+        if message.channel.id == 1122288430664130560 and message.author != bot.user and not message.author.id in admin_ids:
             await message.delete()
     except Exception as e:
         print("오류 발생")
